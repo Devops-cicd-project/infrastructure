@@ -1,0 +1,22 @@
+---
+- name: Copy script file
+  copy:
+    src: script/
+    dest: /opt/
+
+- name: Copy service files
+  copy:
+    src: service/
+    dest: /etc/systemd/system/
+
+- name: rateupdate Service enable
+  systemd:
+    name: rateupdate.service
+    state: started
+    enabled: yes
+
+- name: rateupdate Timer enable
+  systemd:
+    name: rateupdate.timer
+    state: started
+    enabled: yes

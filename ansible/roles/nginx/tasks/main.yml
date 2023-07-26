@@ -1,0 +1,32 @@
+---
+- name: Create docker directory on host
+  file:
+    path: /home/ubuntu/docker
+    state: directory
+    owner: ubuntu
+    group: ubuntu
+
+- name: Create website directory on host
+  file:
+    path: /home/ubuntu/rate-website
+    state: directory
+    owner: ubuntu
+    group: ubuntu
+    mode: 0755
+
+- name: Create empty index.html
+  file:
+    path: /home/ubuntu/rate-website/index.html
+    state: touch
+    owner: ubuntu
+    group: ubuntu
+    mode: 0644
+
+- name: Transfer Dockerfiles and docker-compose.yml to remote host
+  copy:
+    src: docker/
+    dest: /home/ubuntu/docker/
+
+- name: Start Docker Compose services
+  docker_compose:
+    project_src: /home/ubuntu/docker/

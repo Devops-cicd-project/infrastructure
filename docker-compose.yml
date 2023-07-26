@@ -1,0 +1,42 @@
+version: '3'
+services:
+  backend-api:
+    image: 776671337774.dkr.ecr.us-east-1.amazonaws.com/backend-api:1.1
+    # build:
+    #   context: .
+    #   dockerfile: ../backend/Dockerfile
+    # image: backend-api
+    container_name: backend-api
+    # depends_on:
+    #   - postgresdb
+    command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    # && python manage.py createsuperuser
+    env_file: ../backend/.env
+  postgresdb:
+    build:
+      context: .
+      dockerfile: ../backend/compose/production/postgres/Dockerfile
+    image: production_postgres
+    container_name: postgresdb
+    # volumes:
+    #   - local_postgres_data:/var/lib/postgresql/data
+    #   - local_postgres_data_backups:/backups
+    env_file:
+      - ../backend/.env
+  nginx:
+    image: nginx:alpine
+    container_name: nginx-alpine
+    ports:
+      - "8080:80"
+  redis:
+    image: redis:alpine
+    container_name: redis-alpine
+    hostname: redis
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    ports:
+      - "6379:6379"
+# volume saves container data locally don't need to be persisted
+# volumes:
+#   mongo-data:
+#     driver: local

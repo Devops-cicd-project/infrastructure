@@ -1,0 +1,5 @@
+---
+- name: Transfer DjangoApi files to remote host
+  copy:
+    src: DjangoApi/
+    dest: /home/ubuntu/DjangoApi/
